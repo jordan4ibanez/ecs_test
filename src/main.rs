@@ -46,7 +46,7 @@ impl World {
 
     pub fn remove_entity(&mut self, index: usize) {
 
-        match self.name_components.get(index).clone().unwrap() {
+        match self.name_components.get(index).unwrap() {
             Some(name) => println!("{} WAS KILLED!", name.value().clone().to_uppercase()),
             None => println!("Entity {} was killed", index)
         };
