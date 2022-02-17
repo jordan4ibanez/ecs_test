@@ -1,9 +1,16 @@
+use glam::Vec3;
+
 #[derive(Debug)]
 struct Name(&'static str);
+impl Name {
+    pub fn value(&self) -> String {
+        self.0.to_string()
+    }
+}
 #[derive(Debug)]
 struct Health(i32);
 #[derive(Debug)]
-struct Pos(i32);
+struct Pos(Vec3);
 #[derive(Debug)]
 struct Mesh(i32);
 
@@ -38,6 +45,12 @@ impl World {
     }
 
     pub fn remove_entity(&mut self, index: usize) {
+
+        match self.name_components.get(index).clone().unwrap() {
+            Some(name) => println!("{} WAS KILLED!", name.value().clone().to_uppercase()),
+            None => println!("Entity {} was killed", index)
+        };
+
         self.name_components.remove(index);
         self.health_components.remove(index);
         self.pos_components.remove(index);
@@ -49,9 +62,9 @@ impl World {
 fn main() {
     let mut test_world  = World::new();
 
-    test_world.new_entity(Some(Name("fred")), Some(Health(1)), Some(Pos(2)), None);
-    test_world.new_entity(Some(Name("jack")), Some(Health(10)), Some(Pos(5)), None);
-    test_world.new_entity(Some(Name("bob")), Some(Health(166)), Some(Pos(10)), Some(Mesh(33)));
+    test_world.new_entity(Some(Name("fred")), Some(Health(1)), Some(Pos(Vec3::new(1.0, 3.0, 4.0))), None);
+    test_world.new_entity(Some(Name("jack")), Some(Health(10)), Some(Pos(Vec3::new(3.0, 4.0, 5.0))), None);
+    test_world.new_entity(Some(Name("bob")), Some(Health(166)), Some(Pos(Vec3::new(1.1, 0.0, -4.0))), Some(Mesh(33)));
 
     test_world.remove_entity(1);
 
