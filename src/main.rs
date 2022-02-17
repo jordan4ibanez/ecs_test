@@ -56,17 +56,28 @@ impl World {
         self.pos_components.remove(index);
         self.mesh_component.remove(index);
     }
+
+    pub fn iter_mesh(&self) -> impl Iterator<Item = (&Mesh, &Name)> {
+        let output = self.mesh_component.iter().zip(&self.name_components).filter_map(|test|{
+            Some((test.0.as_ref()?, test.1.as_ref()?))
+        });
+        output
+    }
 }
 
 
 fn main() {
-    let mut test_world  = World::new();
+    let mut world: World  = World::new();
 
-    test_world.new_entity(Some(Name("fred")), Some(Health(1)), Some(Pos(Vec3::new(1.0, 3.0, 4.0))), None);
-    test_world.new_entity(Some(Name("jack")), Some(Health(10)), Some(Pos(Vec3::new(3.0, 4.0, 5.0))), None);
-    test_world.new_entity(Some(Name("bob")), Some(Health(166)), Some(Pos(Vec3::new(1.1, 0.0, -4.0))), Some(Mesh(33)));
+    world.new_entity(Some(Name("fred")), Some(Health(1)), Some(Pos(Vec3::new(1.0, 3.0, 4.0))), None);
+    world.new_entity(Some(Name("jack")), Some(Health(10)), Some(Pos(Vec3::new(3.0, 4.0, 5.0))), None);
+    world.new_entity(Some(Name("bob")), Some(Health(166)), Some(Pos(Vec3::new(1.1, 0.0, -4.0))), Some(Mesh(33)));
 
-    test_world.remove_entity(1);
+    world.remove_entity(1);
 
-    println!("{:#?}", test_world);
+    println!("{:#?}", world);
+
+    for entity in world.iter_mesh() {
+        println!("Entity {} has mesh {}", entity.1.value(), entity.0.0);
+    }
 }
